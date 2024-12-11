@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 
 /// <summary>
-/// Controls the player's movement, shooting, and name display
+/// Controls the player's movement, animations, shooting, and name display in a Photon networked game.
 /// </summary>
 public class PlayerController : MonoBehaviourPun
 {
@@ -38,6 +38,11 @@ public class PlayerController : MonoBehaviourPun
     public float bulletSpeed = 10f;
 
     /// <summary>
+    /// Animator component to handle idle and walking animations.
+    /// </summary>
+    public Animator animator;
+
+    /// <summary>
     /// Initializes the player. Sets the player's displayed name based on Photon ownership.
     /// </summary>
     void Start()
@@ -53,7 +58,8 @@ public class PlayerController : MonoBehaviourPun
     }
 
     /// <summary>
-    /// Updates the player's movement and shooting controls
+    /// Updates the player's movement, animation, and shooting controls.
+    /// </summary>
     void Update()
     {
         if (!photonView.IsMine) return;
@@ -63,7 +69,7 @@ public class PlayerController : MonoBehaviourPun
     }
 
     /// <summary>
-    /// Handles player movement and rotation based on input.
+    /// Handles player movement and rotation based on input. Updates the animation state.
     /// </summary>
     private void HandleMovement()
     {
@@ -71,13 +77,17 @@ public class PlayerController : MonoBehaviourPun
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
 
-        // Move the player forward/backward
+        // Calculate forward/backward movement
         Vector3 movement = transform.forward * vertical * moveSpeed * Time.deltaTime;
         transform.position += movement;
 
         // Rotate the player left/right
         float rotation = horizontal * rotationSpeed * Time.deltaTime;
         transform.Rotate(0, rotation, 0);
+
+        // Update the Animator's isWalking parameter
+        bool isWalking = vertical != 0 || horizontal != 0;
+        animator.SetBool("isWalking", isWalking);
     }
 
     /// <summary>
