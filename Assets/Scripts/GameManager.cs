@@ -1,7 +1,6 @@
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
-using System.Collections;
 
 /// <summary>
 /// Manages the overall game state :
@@ -31,28 +30,12 @@ public class GameManager : MonoBehaviourPunCallbacks
         {
             // Instantiate the player prefab at the start of the game
             PhotonNetwork.Instantiate(playerPrefab.name, new Vector3(0, 0, 0), Quaternion.identity);
-
-            // Start the game only when all players are ready
-            StartCoroutine(WaitForPlayersAndStartGame());
+            Invoke("StartGame", 5f);
         }
         else
         {
             Debug.LogError("Not connected to Photon Network");
         }
-    }
-
-    private IEnumerator WaitForPlayersAndStartGame()
-    {
-        // Wait for a brief moment to ensure all players are instantiated
-        yield return new WaitForSeconds(10f);
-
-        while (PhotonNetwork.PlayerList.Length != PhotonNetwork.CurrentRoom.PlayerCount)
-        {
-            yield return null;
-        }
-
-        Debug.Log("All players are ready. Starting the game.");
-        StartGame();
     }
 
     /// <summary>
