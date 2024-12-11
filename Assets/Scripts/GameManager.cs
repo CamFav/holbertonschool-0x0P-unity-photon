@@ -30,7 +30,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         {
             // Instantiate the player prefab at the start of the game
             PhotonNetwork.Instantiate(playerPrefab.name, new Vector3(0, 0, 0), Quaternion.identity);
-            Invoke("StartGame", 5f);
+            Invoke("StartGame", 10f);
         }
         else
         {
